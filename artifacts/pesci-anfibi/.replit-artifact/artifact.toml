@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Pesci & Anfibi – Presentazione Immersiva"
+version = "1.0.0"
+id = "artifacts/pesci-anfibi"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21039
+
+[services.development]
+run = "pnpm --filter @workspace/pesci-anfibi run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/pesci-anfibi", "run", "build" ]
+publicDir = "artifacts/pesci-anfibi/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21039"
+BASE_PATH = "/"

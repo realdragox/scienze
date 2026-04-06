@@ -1,0 +1,50 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "956bEKKa3zSwh6w2tGslM"
+uri = "file://artifacts/pesci-anfibi/src/assets/images/intro-bg.png"
+type = "image"
+title = "Underwater cinematic intro scene"
+
+[[generated]]
+id = "TeptztjK0dYEOEH3a_pEs"
+uri = "file://artifacts/pesci-anfibi/src/assets/images/fish-overview.png"
+type = "image"
+title = "Tropical fish in coral reef"
+
+[[generated]]
+id = "E1AtXWTy56_pmMV6tmuh9"
+uri = "file://artifacts/pesci-anfibi/src/assets/images/fish-anatomy.png"
+type = "image"
+title = "Fish anatomy diagram"
+
+[[generated]]
+id = "jSySGLsTbBzTJ5fyhn-7O"
+uri = "file://artifacts/pesci-anfibi/src/assets/images/fish-habitats.png"
+type = "image"
+title = "Fish habitats collage"
+
+[[generated]]
+id = "c6gmgGeP-M0GEy7V2QtaX"
+uri = "file://artifacts/pesci-anfibi/src/assets/images/amphibian-overview.png"
+type = "image"
+title = "Poison dart frogs"
+
+[[generated]]
+id = "01H1dYaw2f2WGsNmJpP-Q"
+uri = "file://artifacts/pesci-anfibi/src/assets/images/frog-lifecycle.png"
+type = "image"
+title = "Frog life cycle"
+
+[[generated]]
+id = "BPWJKBjPpg--R4sVz4ie8"
+uri = "file://artifacts/pesci-anfibi/src/assets/images/frog-anatomy.png"
+type = "image"
+title = "Frog anatomy diagram"
+
+[[generated]]
+id = "Mx2xeWvbFofZY-Y85xIqw"
+uri = "file://artifacts/pesci-anfibi/src/assets/images/finale-bg.png"
+type = "image"
+title = "Majestic underwater finale"

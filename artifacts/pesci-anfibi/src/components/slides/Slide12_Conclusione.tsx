@@ -3,89 +3,76 @@ import gsap from 'gsap';
 import finaleBg from '@/assets/images/finale-bg.png';
 
 export default function Slide12_Conclusione() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const signatureRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.s12-title', { y: 60, opacity: 0, duration: 1.5, ease: 'power3.out', delay: 0.2 });
-      gsap.from('.s12-sub', { y: 30, opacity: 0, duration: 1, ease: 'power2.out', delay: 0.8 });
-      gsap.from('.s12-body', { y: 20, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 1.2 });
-      gsap.from('.s12-stat', { scale: 0, opacity: 0, duration: 0.6, stagger: 0.15, ease: 'back.out(2)', delay: 1.6 });
-      
-      if (signatureRef.current) {
-        gsap.fromTo(signatureRef.current,
-          { opacity: 0, scale: 0.8, filter: 'blur(10px)' },
-          {
-            opacity: 1, scale: 1, filter: 'blur(0px)',
-            duration: 2,
-            ease: 'power3.out',
-            delay: 2.5
-          }
-        );
-        
-        gsap.to(signatureRef.current, {
-          textShadow: '0 0 60px rgba(0,220,255,1), 0 0 120px rgba(0,220,255,0.5)',
-          duration: 1.5,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 4.5
-        });
-      }
-    }, containerRef);
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.fromTo('.s12-bg', { scale: 1.1, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.4 }, 0)
+        .fromTo('.s12-badge', { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 0.8)
+        .fromTo('.s12-title', { y: 50, opacity: 0, filter: 'blur(12px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1 }, 1)
+        .fromTo('.s12-sub', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 1.7)
+        .fromTo('.s12-body', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 2)
+        .fromTo('.s12-sig', { scale: 0.8, opacity: 0, filter: 'blur(8px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'back.out(1.5)' }, 2.5)
+        .fromTo('.s12-stat', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, stagger: 0.12, ease: 'back.out(1.8)' }, 2.2);
+
+      gsap.to('.s12-title', { y: -6, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 3 });
+      gsap.to('.s12-sig', { textShadow: '0 0 60px rgba(0,220,255,0.9), 0 0 120px rgba(0,200,255,0.5)', duration: 2, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 3.5 });
+    }, ref);
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full h-full flex flex-col items-center justify-center text-center px-6 md:px-16">
-      {/* Background */}
-      <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl">
-        <img src={finaleBg} alt="Mondo acquatico" className="w-full h-full object-cover opacity-25" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,100,200,0.2)_0%,_transparent_70%)]" />
+    <div ref={ref} className="relative w-full h-full flex items-center justify-center overflow-hidden">
+      {/* Cinematic background */}
+      <div className="s12-bg absolute inset-0 z-0">
+        <img src={finaleBg} alt="Finale" className="w-full h-full object-cover opacity-50" />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, rgba(0,10,40,0.7) 0%, rgba(0,3,15,0.92) 100%)' }} />
+        <div className="absolute inset-0" style={{ backgroundImage: 'repeating-linear-gradient(160deg, transparent, transparent 80px, rgba(0,180,255,0.03) 80px, rgba(0,180,255,0.03) 160px)' }} />
       </div>
 
-      <div className="relative z-10 max-w-4xl flex flex-col items-center">
-        <div className="s12-title text-xs md:text-sm tracking-[0.3em] uppercase text-cyan-400 mb-4">Fine del Viaggio</div>
-        
-        <h1 className="s12-title text-5xl md:text-7xl font-black tracking-tighter text-white mb-6"
-            style={{ textShadow: '0 0 60px rgba(0,200,255,0.5), 0 0 120px rgba(0,200,255,0.2)' }}>
-          La Meraviglia<br />del Mondo Acquatico
-        </h1>
-        
-        <p className="s12-sub text-base md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed mb-10">
-          Dai fondali abissali agli stagni di campagna, dal Cretaceo ai giorni nostri, pesci e anfibi
-          continuano a sorprenderci con la loro straordinaria capacità di adattamento e la loro biodiversità unica.
-          Proteggerli significa proteggere l'intero ecosistema del nostro pianeta.
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-3xl">
+        <div className="s12-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/30 mb-5"
+             style={{ background: 'rgba(0,100,200,0.1)', backdropFilter: 'blur(8px)' }}>
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="text-xs tracking-[0.3em] uppercase text-cyan-400/90">Fine presentazione</span>
+        </div>
+
+        <h2 className="s12-title text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter text-white mb-4 leading-tight"
+            style={{ textShadow: '0 0 40px rgba(0,200,255,0.4)' }}>
+          Natura Straordinaria
+        </h2>
+
+        <p className="s12-sub text-base sm:text-xl text-cyan-300/80 font-light tracking-wide mb-4">
+          Dal fondo degli oceani alle cime delle Ande
         </p>
 
-        <div className="grid grid-cols-3 gap-4 mb-12 w-full max-w-lg">
+        <p className="s12-body text-sm text-white/45 max-w-xl leading-relaxed mb-6">
+          Pesci e anfibi rappresentano oltre 41.000 specie — una finestra aperta su 500 milioni di anni di evoluzione. Proteggerli significa proteggere ogni ecosistema che li ospita, e con esso il nostro futuro.
+        </p>
+
+        <div className="flex gap-4 mb-8">
           {[
-            { n: '41k+', l: 'Specie totali' },
-            { n: '360M', l: 'Anni di storia' },
-            { n: '~40%', l: 'Specie a rischio' }
+            { n: '33.000+', l: 'Specie di pesci', c: '#00c8ff' },
+            { n: '8.000+', l: 'Specie di anfibi', c: '#66ff88' },
+            { n: '1/3', l: 'A rischio estinzione', c: '#ff6644' },
           ].map((s, i) => (
-            <div key={i} className="s12-stat rounded-xl p-4 border border-cyan-500/20"
-                 style={{ background: 'rgba(0,30,60,0.5)', backdropFilter: 'blur(8px)' }}>
-              <div className="text-2xl font-black text-cyan-400 mb-1">{s.n}</div>
-              <div className="text-xs text-white/50 uppercase tracking-wide">{s.l}</div>
+            <div key={i} className="s12-stat flex flex-col items-center gap-0.5 px-4 py-3 rounded-xl border"
+                 style={{ background: 'rgba(0,10,30,0.6)', backdropFilter: 'blur(10px)', borderColor: `${s.c}25` }}>
+              <div className="text-lg sm:text-2xl font-black" style={{ color: s.c }}>{s.n}</div>
+              <div className="text-[10px] text-white/40 text-center">{s.l}</div>
             </div>
           ))}
         </div>
 
-        {/* Central large signature */}
-        <div ref={signatureRef} className="mt-4 text-center">
-          <div className="text-xs uppercase tracking-[0.4em] text-white/30 mb-3">presentazione realizzata da</div>
-          <div
-            className="text-3xl md:text-4xl font-bold tracking-widest lowercase"
-            style={{
-              color: 'rgba(0,220,255,1)',
-              textShadow: '0 0 30px rgba(0,220,255,0.8), 0 0 60px rgba(0,220,255,0.4)'
-            }}
-          >
-            scripted by jakub
-          </div>
+        {/* Author signature — large, centered, glowing */}
+        <div className="s12-sig font-mono tracking-[0.35em] uppercase text-lg sm:text-2xl font-bold"
+             style={{
+               color: 'rgba(0,220,255,0.9)',
+               textShadow: '0 0 30px rgba(0,220,255,0.6), 0 0 60px rgba(0,200,255,0.3)',
+               letterSpacing: '0.3em'
+             }}>
+          scripted by jakub
         </div>
       </div>
     </div>

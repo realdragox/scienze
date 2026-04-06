@@ -2,61 +2,65 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import fishOverview from '@/assets/images/fish-overview.png';
 
-function AnimatedCounter({ target, suffix = '', duration = 2 }: { target: number; suffix?: string; duration?: number }) {
-  const [count, setCount] = useState(0);
+function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
+  const [n, setN] = useState(0);
   useEffect(() => {
-    let start = 0;
-    const step = target / (duration * 60);
+    let frame = 0;
+    const total = 80;
     const timer = setInterval(() => {
-      start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(Math.floor(start));
-    }, 1000 / 60);
+      frame++;
+      const progress = frame / total;
+      const ease = 1 - Math.pow(1 - progress, 3);
+      setN(Math.floor(ease * target));
+      if (frame >= total) { setN(target); clearInterval(timer); }
+    }, 16);
     return () => clearInterval(timer);
-  }, [target, duration]);
-  return <span>{count.toLocaleString('it-IT')}{suffix}</span>;
+  }, [target]);
+  return <>{n.toLocaleString('it-IT')}{suffix}</>;
 }
 
-const stats = [
-  { value: 33000, suffix: '+', label: 'Specie Conosciute', desc: 'I pesci sono i vertebrati più numerosi sulla Terra' },
-  { value: 70, suffix: '%', label: 'Pesci Ossei', desc: 'La grande maggioranza appartiene alla classe Osteichthyes' },
-  { value: 400, suffix: 'M', label: 'Anni di Evoluzione', desc: 'I pesci abitano i nostri oceani da centinaia di milioni di anni' },
-];
-
 export default function Slide02_PesciOverview() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.s02-title', { y: 50, opacity: 0, duration: 1, ease: 'power3.out' });
-      gsap.from('.s02-img', { scale: 0.8, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.3 });
-      gsap.from('.s02-stat', { y: 40, opacity: 0, duration: 0.8, stagger: 0.2, ease: 'power2.out', delay: 0.5 });
-    }, containerRef);
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.fromTo('.s02-img', { scale: 1.1, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2 }, 0)
+        .fromTo('.s02-heading', { y: 40, opacity: 0, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.9 }, 0.3)
+        .fromTo('.s02-stat', { y: 30, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, stagger: 0.15 }, 0.7);
+    }, ref);
     return () => ctx.revert();
   }, []);
 
-  return (
-    <div ref={containerRef} className="w-full max-w-6xl mx-auto flex flex-col items-center text-center px-4">
-      <div className="s02-title text-xs md:text-sm tracking-[0.3em] uppercase text-cyan-400 mb-3">Capitolo I</div>
-      <h2 className="s02-title text-5xl md:text-7xl font-black tracking-tighter text-white mb-8"
-          style={{ textShadow: '0 0 40px rgba(0,200,255,0.4)' }}>
-        I Pesci
-      </h2>
+  const stats = [
+    { value: 33000, suf: '+', label: 'Specie', sub: 'I vertebrati più numerosi' },
+    { value: 96, suf: '%', label: 'Ossei', sub: 'Pesci con scheletro osseo' },
+    { value: 400, suf: 'M', label: 'Anni', sub: 'Di evoluzione nei mari' },
+  ];
 
-      <div className="s02-img w-full max-w-2xl mb-10 rounded-2xl overflow-hidden border border-cyan-500/20"
-           style={{ boxShadow: '0 0 60px rgba(0,150,255,0.2)' }}>
-        <img src={fishOverview} alt="Pesci tropicali" className="w-full h-56 md:h-72 object-cover" />
+  return (
+    <div ref={ref} className="w-full h-full flex flex-col items-center justify-center px-4 max-w-5xl mx-auto">
+      <div className="s02-heading text-center mb-5">
+        <div className="text-xs tracking-[0.3em] uppercase text-cyan-400 mb-2">Capitolo I</div>
+        <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-white"
+            style={{ textShadow: '0 0 40px rgba(0,200,255,0.35)' }}>I Pesci</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+      <div className="s02-img w-full max-w-xl rounded-2xl overflow-hidden border border-cyan-500/20 mb-5"
+           style={{ boxShadow: '0 0 50px rgba(0,150,255,0.2)', position: 'relative' }}>
+        <img src={fishOverview} alt="Pesci" className="w-full h-44 sm:h-56 object-cover" />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,10,30,0.7) 0%, transparent 60%)' }} />
+        <div className="absolute bottom-3 left-4 text-white/60 text-xs italic">Pesci tropicali nella barriera corallina</div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3 w-full max-w-xl">
         {stats.map((s, i) => (
-          <div key={i} className="s02-stat rounded-2xl p-6 text-center border border-cyan-500/20"
-               style={{ background: 'rgba(0,30,60,0.6)', backdropFilter: 'blur(12px)' }}>
-            <div className="text-4xl md:text-5xl font-black text-cyan-400 mb-2">
-              <AnimatedCounter target={s.value} suffix={s.suffix} duration={1.5 + i * 0.3} />
+          <div key={i} className="s02-stat rounded-xl p-4 text-center border border-cyan-500/15"
+               style={{ background: 'rgba(0,20,50,0.7)', backdropFilter: 'blur(10px)' }}>
+            <div className="text-2xl sm:text-3xl font-black text-cyan-400 leading-none mb-1">
+              <Counter target={s.value} suffix={s.suf} />
             </div>
-            <div className="text-white font-semibold mb-2 tracking-wide text-sm uppercase">{s.label}</div>
-            <div className="text-white/50 text-xs leading-relaxed">{s.desc}</div>
+            <div className="text-white text-xs font-bold uppercase tracking-wide mb-0.5">{s.label}</div>
+            <div className="text-white/40 text-[10px] leading-snug">{s.sub}</div>
           </div>
         ))}
       </div>

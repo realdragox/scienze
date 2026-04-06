@@ -4,74 +4,69 @@ import introBg from '@/assets/images/intro-bg.png';
 
 export default function Slide01_Intro() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.slide01-title', { y: 60, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.2 });
-      gsap.from('.slide01-sub', { y: 30, opacity: 0, duration: 1, ease: 'power2.out', delay: 0.6 });
-      gsap.from('.slide01-body', { y: 20, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 1 });
-      gsap.from('.slide01-fish', { x: -200, opacity: 0, duration: 1.5, ease: 'power2.out', delay: 0.4, stagger: 0.15 });
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.fromTo(imgRef.current,
+        { scale: 1.15, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 1.6 }, 0
+      )
+      .fromTo('.s01-badge', { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 0.5)
+      .fromTo('.s01-title', { y: 50, opacity: 0, filter: 'blur(12px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1 }, 0.7)
+      .fromTo('.s01-sub', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 1.2)
+      .fromTo('.s01-body', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 1.5)
+      .fromTo('.s01-hint', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 2);
+
+      gsap.to('.s01-title', { y: -8, duration: 3.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 2 });
     }, containerRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full h-full flex flex-col items-center justify-center text-center px-6 md:px-16">
-      {/* Background image overlay */}
-      <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl">
-        <img src={introBg} alt="Underwater scene" className="w-full h-full object-cover opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+    <div ref={containerRef} className="relative w-full h-full flex items-center justify-center overflow-hidden">
+      {/* Cinematic image background */}
+      <div ref={imgRef} className="absolute inset-0 z-0">
+        <img src={introBg} alt="Oceano" className="w-full h-full object-cover" />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(0,5,20,0.85) 0%, rgba(0,10,40,0.6) 50%, rgba(0,5,20,0.9) 100%)' }} />
+        {/* Light rays */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'repeating-linear-gradient(170deg, transparent, transparent 60px, rgba(0,150,255,0.04) 60px, rgba(0,150,255,0.04) 120px)',
+          animation: 'rayShift 8s ease-in-out infinite alternate'
+        }} />
       </div>
 
-      {/* Animated fish silhouettes */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="slide01-fish absolute"
-            style={{
-              top: `${20 + i * 12}%`,
-              left: `${-5 + i * 5}%`,
-              fontSize: `${1.5 + i * 0.4}rem`,
-              opacity: 0.4 - i * 0.05,
-              animation: `fishSwim${i} ${8 + i * 2}s linear infinite`
-            }}
-          >
-            &#x1F41F;
-          </div>
-        ))}
-      </div>
-
-      <div className="relative z-10 max-w-4xl">
-        <div className="slide01-title text-[0.8rem] md:text-sm tracking-[0.3em] uppercase text-cyan-400 mb-4 font-light">
-          Benvenuti nel
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-3xl">
+        <div className="s01-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/30 mb-5"
+             style={{ background: 'rgba(0,150,255,0.1)', backdropFilter: 'blur(8px)' }}>
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="text-xs tracking-[0.3em] uppercase text-cyan-400/90">Presentazione interattiva</span>
         </div>
-        <h1 className="slide01-title text-5xl md:text-8xl font-black tracking-tighter text-white mb-6"
+
+        <h1 className="s01-title text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter text-white leading-none mb-4"
             style={{ textShadow: '0 0 60px rgba(0,200,255,0.5), 0 0 120px rgba(0,200,255,0.2)' }}>
-          Mondo Acquatico
+          Pesci &<br />Anfibi
         </h1>
-        <p className="slide01-sub text-xl md:text-3xl text-cyan-300/80 font-light tracking-wide mb-8">
-          Pesci & Anfibi
-        </p>
-        <p className="slide01-body text-base md:text-lg text-white/60 max-w-2xl mx-auto leading-relaxed">
-          Immergiamoci insieme in un viaggio straordinario attraverso gli habitat acquatici della Terra,
-          scoprendo i segreti dei pesci e degli anfibi — creature che hanno conquistato oceani, fiumi, laghi e paludi.
+
+        <p className="s01-sub text-lg sm:text-xl text-cyan-300/80 font-light tracking-wide mb-5">
+          Un viaggio nel cuore del mondo acquatico
         </p>
 
-        <div className="slide01-body mt-12 flex items-center justify-center gap-2 text-cyan-400/60 text-sm tracking-widest">
-          <svg className="w-4 h-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        <p className="s01-body text-sm sm:text-base text-white/50 max-w-lg leading-relaxed">
+          Immergiamoci insieme tra oceani, fiumi e paludi per scoprire i segreti di due classi straordinarie di vertebrati che abitano il nostro pianeta da centinaia di milioni di anni.
+        </p>
+
+        <div className="s01-hint mt-8 flex items-center gap-2 text-white/30 text-xs tracking-widest uppercase">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
           </svg>
-          Premi la freccia destra per iniziare
+          Freccia destra per iniziare
         </div>
       </div>
 
       <style>{`
-        @keyframes fishSwim0 { 0% { transform: translateX(-200px); } 100% { transform: translateX(120vw); } }
-        @keyframes fishSwim1 { 0% { transform: translateX(-200px); } 100% { transform: translateX(120vw); } }
-        @keyframes fishSwim2 { 0% { transform: translateX(-200px); } 100% { transform: translateX(120vw); } }
-        @keyframes fishSwim3 { 0% { transform: translateX(-200px); } 100% { transform: translateX(120vw); } }
-        @keyframes fishSwim4 { 0% { transform: translateX(-200px); } 100% { transform: translateX(120vw); } }
+        @keyframes rayShift { from { transform: translateX(-20px); } to { transform: translateX(20px); } }
       `}</style>
     </div>
   );
